@@ -4,9 +4,9 @@
 
 - 日時: 2026-11-27（JST）
 - ブランチ: `claude/project-thread-4tpw9r`
-- やっていたこと: T-003（タグ ID の発行スクリプト）
-- 終わったこと: `src/lib/tag-id.ts`・`src/lib/tag-issue.ts`・`scripts/issue-tags.ts`、単体テスト、ローカル DB での発行確認、D-007 の記録
+- やっていたこと: T-004（`/t/[id]` の振り分け）
+- 終わったこと: タグの画面（未登録／有効／停止／見つからない）、登録の仮ページ、noindex・no-referrer、E2E 用 seed、D-008 の記録。M1 はこれで一通りそろう
 - 未コミットの変更: なし（PR でレビュー待ち）
-- 次にやること: PR のマージ後、`/t/[id]` の振り分けのタスクを作って着手（M1 の残り）
+- 次にやること: PR のマージ後、M2（持ち主の登録: メールログイン、タグと持ち物の結び付け関数、持ち物の設定画面）を `/plan` で分解
 - 確認待ち: PR のマージ。本番ドメイン（タグに焼く前に必須）
-- 覚えておくこと: package.json は `"type": "module"`（scripts/ を Node でそのまま実行するため）。`get_tag_public` の生成型は null を含まないが、未登録・停止中は null が返る。
+- 覚えておくこと: タグ関係のコードは `src/lib/tags/`。cacheComponents が有効なので、params などを読む部分は `<Suspense>` の中に置く。E2E は `npm run db:start` 後に実行するとタグの画面まで通る。

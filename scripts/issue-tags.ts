@@ -12,8 +12,8 @@
 import { closeSync, mkdirSync, openSync, writeSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { createClient } from "@supabase/supabase-js";
-import { generateTagId } from "../src/lib/tag-id.ts";
-import { buildCsv, parseIssueArgs } from "../src/lib/tag-issue.ts";
+import { generateTagId } from "../src/lib/tags/id.ts";
+import { buildCsv, parseIssueArgs } from "../src/lib/tags/issue.ts";
 
 const BATCH_SIZE = 500;
 const MAX_ROUNDS = 5;

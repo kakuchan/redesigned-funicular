@@ -25,7 +25,7 @@ npm run dev                  # http://localhost:3000
 | `npm run lint` | ESLint |
 | `npm run typecheck` | ルートの型を生成してから TypeScript の型チェック |
 | `npm test` | 単体テスト（Vitest） |
-| `npm run test:e2e` | E2E（Playwright、スマホ表示）。初回は `npx playwright install chromium` |
+| `npm run test:e2e` | E2E（Playwright、スマホ表示）。ローカルの Supabase が動いていればタグの画面もテスト（データは `supabase/seed.sql`）。初回は `npx playwright install chromium` |
 | `npm run build` | 本番ビルド |
 | `npm run test:db` | DB のテスト（pgTAP、ローカルの Supabase が必要） |
 | `npm run db:types` | DB から TypeScript の型を作り直す |
