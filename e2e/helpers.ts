@@ -22,23 +22,30 @@ export function uniqueEmail(prefix = "owner") {
   return `${prefix}-${Date.now()}-${Math.random().toString(36).slice(2, 8)}@example.test`;
 }
 
-/** テスト用受信箱（Mailpit）から、最新の確認コードを取り出す */
-export async function latestCode(email: string): Promise<string> {
+type MailMessage = { Subject: string; Text: string; HTML: string };
+
+/** テスト用受信箱（Mailpit）から、条件に合う最新のメールを待って取り出す */
+export async function waitForMail(
+  email: string,
+  match: (m: MailMessage) => boolean = () => true,
+): Promise<MailMessage> {
   const base = process.env.E2E_MAILPIT_URL!;
-  for (let i = 0; i < 20; i++) {
+  for (let i = 0; i < 40; i++) {
     const res = await fetch(`${base}/api/v1/search?query=${encodeURIComponent(`to:${email}`)}`);
-    const list = (await res.json()) as { messages: { ID: string }[] };
-    if (list.messages?.length) {
-      const msg = (await (await fetch(`${base}/api/v1/message/${list.messages[0].ID}`)).json()) as {
-        Text: string;
-        HTML: string;
-      };
-      const code = (msg.Text || msg.HTML).match(/\b(\d{6})\b/);
-      if (code) return code[1];
+    const list = (await res.json()) as { messages?: { ID: string }[] };
+    for (const item of list.messages ?? []) {
+      const msg = (await (await fetch(`${base}/api/v1/message/${item.ID}`)).json()) as MailMessage;
+      if (match(msg)) return msg;
     }
     await new Promise((r) => setTimeout(r, 250));
   }
-  throw new Error(`確認コードのメールが届きません: ${email}`);
+  throw new Error(`メールが届きません: ${email}`);
+}
+
+/** 最新の確認コード */
+export async function latestCode(email: string): Promise<string> {
+  const msg = await waitForMail(email, (m) => /\b\d{6}\b/.test(m.Text || m.HTML));
+  return (msg.Text || msg.HTML).match(/\b(\d{6})\b/)![1];
 }
 
 /**

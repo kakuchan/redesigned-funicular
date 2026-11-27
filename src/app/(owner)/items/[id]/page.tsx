@@ -9,6 +9,14 @@ import { ConfirmButton } from "./confirm-button";
 
 export const metadata: Metadata = { title: "持ち物の設定" };
 
+const dateFormat = new Intl.DateTimeFormat("ja-JP", {
+  month: "numeric",
+  day: "numeric",
+  hour: "2-digit",
+  minute: "2-digit",
+  timeZone: "Asia/Tokyo",
+});
+
 export default function ItemPage({ params, searchParams }: PageProps<"/items/[id]">) {
   return (
     <main>
@@ -37,6 +45,12 @@ async function Item({
     .maybeSingle();
   if (!item) notFound();
 
+  const { data: conversations } = await supabase
+    .from("conversations")
+    .select("id, status, created_at, last_message_at")
+    .eq("item_id", item.id)
+    .order("last_message_at", { ascending: false });
+
   return (
     <>
       {registered && (
@@ -45,6 +59,28 @@ async function Item({
         </p>
       )}
       <h1>{item.name}</h1>
+
+      <section>
+        <h2>届いた連絡</h2>
+        {conversations && conversations.length > 0 ? (
+          <ul className="item-list">
+            {conversations.map((c) => (
+              <li key={c.id}>
+                <Link href={`/conversations/${c.id}`} className="card item-link">
+                  <span className="item-name">
+                    {dateFormat.format(new Date(c.created_at))} の連絡
+                  </span>
+                  <span className={c.status === "open" ? "badge badge-lost" : "badge"}>
+                    {c.status === "open" ? "やり取り中" : "終了"}
+                  </span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p>まだ連絡は届いていません。</p>
+        )}
+      </section>
 
       <section className="card">
         <h2>状態</h2>

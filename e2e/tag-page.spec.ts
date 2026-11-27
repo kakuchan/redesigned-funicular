@@ -20,7 +20,10 @@ test.describe("タグを読んだときの画面", () => {
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("青い水筒");
     await expect(page.getByText("〇〇小の子どもの水筒です。連絡お願いします")).toBeVisible();
-    await expect(page.getByRole("button", { name: /持ち主に連絡する/ })).toBeVisible();
+    await expect(page.getByRole("link", { name: "持ち主に知らせる" })).toHaveAttribute(
+      "href",
+      `/t/${ACTIVE}/contact`,
+    );
     await expect(page.getByText("持ち主がさがしています")).toHaveCount(0);
 
     // 持ち主の情報がページに含まれない
