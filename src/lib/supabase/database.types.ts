@@ -25,14 +25,14 @@ export type Database = {
           Tables: {
             "items": {
                   Row: {
-                    "created_at": string,"id": string,"lost_mode": boolean,"name": string,"owner_id": string,"public_message": string,"tag_id": string,"updated_at": string
+                    "created_at": string,"id": string,"lost_mode": boolean,"name": string,"owner_id": string,"paused": boolean,"public_message": string,"tag_id": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"id"?: string,"lost_mode"?: boolean,"name": string,"owner_id": string,"public_message"?: string,"tag_id": string,"updated_at"?: string
+                    "created_at"?: string,"id"?: string,"lost_mode"?: boolean,"name": string,"owner_id": string,"paused"?: boolean,"public_message"?: string,"tag_id": string,"updated_at"?: string
                   }
                   Update: {
-                    "created_at"?: string,"id"?: string,"lost_mode"?: boolean,"name"?: string,"owner_id"?: string,"public_message"?: string,"tag_id"?: string,"updated_at"?: string
+                    "created_at"?: string,"id"?: string,"lost_mode"?: boolean,"name"?: string,"owner_id"?: string,"paused"?: boolean,"public_message"?: string,"tag_id"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -67,6 +67,12 @@ isOneToOne: true
 { Args: { "p_tag_id": string }; Returns: {
               "item_name": string,"lost_mode": boolean,"public_message": string,"status": Database["public"]['Enums']["tag_status"]
             }[]
+                           },
+"register_tag":
+{ Args: { "p_name": string,"p_public_message"?: string,"p_tag_id": string }; Returns: string
+                           },
+"release_tag":
+{ Args: { "p_item_id": string }; Returns: undefined
                            }
           }
           Enums: {
