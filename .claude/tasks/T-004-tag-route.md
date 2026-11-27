@@ -1,7 +1,7 @@
 ---
 id: T-004
 title: /t/[id] の振り分け
-status: review
+status: done
 milestone: M1
 depends: [T-002, T-003]
 parallel: no

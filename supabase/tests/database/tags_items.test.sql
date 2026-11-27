@@ -3,7 +3,7 @@
 begin;
 create extension if not exists pgtap with schema extensions;
 
-select plan(24);
+select plan(25);
 
 -- ---------- 準備（postgres 権限で作る） ----------
 insert into auth.users (id, email)
@@ -62,7 +62,10 @@ select results_eq(
 );
 
 update public.items set name = '乗っ取り' where tag_id = 'TagBbbbbbbbbbbbb';
-delete from public.items where tag_id = 'TagBbbbbbbbbbbbb';
+select throws_ok(
+  $$ delete from public.items where tag_id = 'TagBbbbbbbbbbbbb' $$,
+  '42501', null, '持ち物を直接 delete できない（release_tag() を使う）'
+);
 
 update public.items set name = '青い水筒（大）', lost_mode = true
   where tag_id = 'TagAaaaaaaaaaaaa';

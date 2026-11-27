@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { hasDb } from "./helpers";
 
 // ID は supabase/seed.sql と合わせてある
 const ACTIVE = "E2eActiveTagAbcd";
@@ -8,7 +9,7 @@ const STOPPED = "E2eStoppedTagAbc";
 
 test.describe("タグを読んだときの画面", () => {
   test.skip(
-    !process.env.E2E_HAS_DB,
+    !hasDb,
     "ローカルの Supabase が起動していません（npm run db:start）",
   );
 
@@ -46,9 +47,10 @@ test.describe("タグを読んだときの画面", () => {
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(
       "まだ登録されていないタグです",
     );
-    await page.getByRole("link", { name: "登録する" }).click();
-    await expect(page).toHaveURL(`/register/${NEW}`);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText("タグの登録");
+    await expect(page.getByRole("link", { name: "登録する" })).toHaveAttribute(
+      "href",
+      `/register/${NEW}`,
+    );
   });
 
   test("停止中のタグは使えないと出し、持ち物の情報は出さない", async ({ page }) => {

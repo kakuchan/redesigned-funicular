@@ -9,8 +9,9 @@ import type { Database } from "./database.types";
  * ログイン中の利用者の権限で動くので、RLS がそのまま効く。
  */
 export async function createClient() {
-  const { supabaseUrl, supabasePublishableKey } = publicEnv();
+  // 先に cookie を読む（リクエストごとの処理になり、ビルド時には実行されない）
   const cookieStore = await cookies();
+  const { supabaseUrl, supabasePublishableKey } = publicEnv();
 
   return createServerClient<Database>(supabaseUrl, supabasePublishableKey, {
     cookies: {

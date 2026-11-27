@@ -16,6 +16,7 @@ cp .env.example .env.local   # 値は下の手順で入れる
 npm run db:start             # ローカルの Supabase を起動（初回はイメージの取得に時間がかかります）
 npx supabase status          # API URL と公開キー（Publishable key）を .env.local に書く
 npm run dev                  # http://localhost:3000
+# ログインの確認コードはテスト用受信箱（npx supabase status の Mailpit URL）に届きます
 ```
 
 ## よく使うコマンド
@@ -37,6 +38,8 @@ npm run dev                  # http://localhost:3000
 - `src/app/` 画面（App Router）
 - `src/lib/supabase/` Supabase クライアント（ブラウザ用 `client.ts`、サーバー用 `server.ts`）
 - `src/lib/env.ts` 公開してよい環境変数の読み込み
+- `src/lib/tags/` タグ ID・拾った人用の読み取り、`src/lib/items/` 入力チェック、`src/lib/auth/` ログイン
+- `src/proxy.ts` ログインのセッション更新（持ち主の画面だけ）
 - `supabase/` ローカル設定とマイグレーション（`supabase/migrations/`）
 - `scripts/` 運営用のスクリプト（タグ ID の発行）
 - `e2e/` Playwright のテスト

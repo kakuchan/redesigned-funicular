@@ -5,6 +5,9 @@
   --border: #dddddd;
   --accent: #c2410c;
   --accent-foreground: #ffffff;
+  --link: #1d4ed8;
+  --danger: #b91c1c;
+  --success: #15803d;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -15,6 +18,9 @@
     --border: #333333;
     --accent: #fb923c;
     --accent-foreground: #1a1a1a;
+    --link: #93c5fd;
+    --danger: #ef4444;
+    --success: #4ade80;
   }
 }
 
@@ -113,4 +119,122 @@ main > * + * {
 
 .card .button {
   margin-top: 0.75rem;
+}
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 40rem;
+  margin: 0 auto;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  font-weight: 700;
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+a {
+  color: var(--link);
+}
+
+.link-button {
+  background: none;
+  border: none;
+  color: var(--link);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form label {
+  font-weight: 700;
+}
+
+input,
+textarea,
+select {
+  width: 100%;
+  font: inherit;
+  font-size: 1rem;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.error {
+  color: var(--danger);
+  font-weight: 700;
+}
+
+.success {
+  color: var(--success);
+  font-weight: 700;
+}
+
+.button-secondary {
+  background: transparent;
+  color: var(--foreground);
+  border: 1px solid var(--border);
+}
+
+.button-danger {
+  background: var(--danger);
+  color: #ffffff;
+}
+
+.card form + form {
+  margin-top: 0.5rem;
+}
+
+.confirm {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.item-link {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+.item-name {
+  font-weight: 700;
+  flex: 1 1 auto;
+  overflow-wrap: anywhere;
+}
+
+.badge {
+  font-size: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.125rem 0.5rem;
+}
+
+.badge-lost {
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border-color: var(--accent);
 }
