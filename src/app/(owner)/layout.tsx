@@ -28,7 +28,8 @@ async function SignOutButton() {
   const { user } = await currentUser();
   if (!user) return null;
   return (
-    <form action={signOut}>
+    <form action={signOut} className="header-actions">
+      <Link href="/account">アカウント</Link>
       <button type="submit" className="link-button">
         ログアウト
       </button>
