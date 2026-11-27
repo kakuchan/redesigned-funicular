@@ -3,9 +3,10 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { MessageForm } from "@/components/message-form";
 import { MessageList, type MessageView } from "@/components/message-list";
+import { ReportForm } from "@/components/report-form";
 import { hashFinderToken, isFinderToken } from "@/lib/conversations/token";
 import { createAdminClient } from "@/lib/supabase/admin";
-import { finderReply } from "./actions";
+import { finderReply, finderReport } from "./actions";
 
 export const metadata: Metadata = {
   title: "持ち主とのやり取り",
@@ -25,6 +26,7 @@ type FinderConversation = {
     body: string;
     item_location: string | null;
     has_location: boolean;
+    has_photo: boolean;
     created_at: string;
   }[];
 };
@@ -73,6 +75,8 @@ async function Conversation({
     createdAt: m.created_at,
     position: null,
     hasPosition: m.has_location,
+    photoUrl: null,
+    hasPhoto: m.has_photo,
   }));
 
   return (
@@ -96,11 +100,12 @@ async function Conversation({
             </p>
           </section>
         </>
-      ) : conversation.status === "closed" ? (
+      ) : conversation.status !== "open" ? (
         <p className="card">持ち主が受け取りを済ませました。ご協力ありがとうございました。</p>
       ) : (
         <p className="card">このやり取りは期限が切れました。</p>
       )}
+      <ReportForm action={finderReport.bind(null, token)} />
     </>
   );
 }

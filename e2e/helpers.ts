@@ -4,7 +4,7 @@ import { generateTagId } from "../src/lib/tags/id";
 
 export const hasDb = !!process.env.E2E_HAS_DB;
 
-function admin() {
+export function admin() {
   return createClient(process.env.E2E_SUPABASE_URL!, process.env.E2E_SECRET_KEY!, {
     auth: { persistSession: false },
   });

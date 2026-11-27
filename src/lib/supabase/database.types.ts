@@ -23,16 +23,36 @@ export type Database = {
           }
         },"public": {
           Tables: {
-            "conversations": {
+            "blocked_senders": {
                   Row: {
-                    "closed_at": string | null,"created_at": string,"expires_at": string,"finder_token_hash": string,"id": string,"item_id": string,"last_message_at": string,"status": string,"conversation_is_active": boolean | null
+                    "created_at": string,"id": string,"ip_hash": string,"item_id": string,"until": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: string,"ip_hash": string,"item_id": string,"until"?: string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: string,"ip_hash"?: string,"item_id"?: string,"until"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "blocked_senders_item_id_fkey"
+      columns: ["item_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"conversations": {
+                  Row: {
+                    "closed_at": string | null,"created_at": string,"expires_at": string,"finder_ip_hash": string | null,"finder_token_hash": string,"id": string,"item_id": string,"last_message_at": string,"status": string,"conversation_is_active": boolean | null
                   }
                   ComputedFields: "conversation_is_active"
                   Insert: {
-                    "closed_at"?: string | null,"created_at"?: string,"expires_at"?: string,"finder_token_hash": string,"id"?: string,"item_id": string,"last_message_at"?: string,"status"?: string
+                    "closed_at"?: string | null,"created_at"?: string,"expires_at"?: string,"finder_ip_hash"?: string | null,"finder_token_hash": string,"id"?: string,"item_id": string,"last_message_at"?: string,"status"?: string
                   }
                   Update: {
-                    "closed_at"?: string | null,"created_at"?: string,"expires_at"?: string,"finder_token_hash"?: string,"id"?: string,"item_id"?: string,"last_message_at"?: string,"status"?: string
+                    "closed_at"?: string | null,"created_at"?: string,"expires_at"?: string,"finder_ip_hash"?: string | null,"finder_token_hash"?: string,"id"?: string,"item_id"?: string,"last_message_at"?: string,"status"?: string
                   }
                   Relationships: [
                     {
@@ -65,18 +85,52 @@ isOneToOne: true
                   ]
                 },"messages": {
                   Row: {
-                    "body": string,"conversation_id": string,"created_at": string,"id": string,"item_location": string | null,"latitude": number | null,"longitude": number | null,"sender": string
+                    "body": string,"conversation_id": string,"created_at": string,"id": string,"item_location": string | null,"latitude": number | null,"longitude": number | null,"photo_path": string | null,"sender": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "body"?: string,"conversation_id": string,"created_at"?: string,"id"?: string,"item_location"?: string | null,"latitude"?: number | null,"longitude"?: number | null,"sender": string
+                    "body"?: string,"conversation_id": string,"created_at"?: string,"id"?: string,"item_location"?: string | null,"latitude"?: number | null,"longitude"?: number | null,"photo_path"?: string | null,"sender": string
                   }
                   Update: {
-                    "body"?: string,"conversation_id"?: string,"created_at"?: string,"id"?: string,"item_location"?: string | null,"latitude"?: number | null,"longitude"?: number | null,"sender"?: string
+                    "body"?: string,"conversation_id"?: string,"created_at"?: string,"id"?: string,"item_location"?: string | null,"latitude"?: number | null,"longitude"?: number | null,"photo_path"?: string | null,"sender"?: string
                   }
                   Relationships: [
                     {
       foreignKeyName: "messages_conversation_id_fkey"
+      columns: ["conversation_id"]
+isOneToOne: false
+      referencedRelation: "conversations"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"rate_events": {
+                  Row: {
+                    "created_at": string,"id": number,"key": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: never,"key": string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: never,"key"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"reports": {
+                  Row: {
+                    "conversation_id": string | null,"created_at": string,"id": string,"reason": string,"reporter": string,"status": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "conversation_id"?: string | null,"created_at"?: string,"id"?: string,"reason": string,"reporter": string,"status"?: string
+                  }
+                  Update: {
+                    "conversation_id"?: string | null,"created_at"?: string,"id"?: string,"reason"?: string,"reporter"?: string,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "reports_conversation_id_fkey"
       columns: ["conversation_id"]
 isOneToOne: false
       referencedRelation: "conversations"
@@ -106,6 +160,9 @@ isOneToOne: false
             "conversation_is_active":
 { Args: { "c": Omit<Database["public"]['Tables']["conversations"]['Row'], Database["public"]['Tables']["conversations"]['ComputedFields']> }; Returns: boolean
                            },
+"finder_attach_photo":
+{ Args: { "p_message_id": string,"p_photo_path": string }; Returns: undefined
+                           },
 "finder_get_conversation":
 { Args: { "p_token_hash": string }; Returns: Json
                            },
@@ -114,9 +171,12 @@ isOneToOne: false
               "conversation_id": string,"item_id": string,"item_name": string,"owner_id": string
             }[]
                            },
+"finder_report_conversation":
+{ Args: { "p_reason": string,"p_token_hash": string }; Returns: undefined
+                           },
 "finder_start_conversation":
-{ Args: { "p_body": string,"p_item_location": string,"p_latitude"?: number,"p_longitude"?: number,"p_tag_id": string,"p_token_hash": string }; Returns: {
-              "conversation_id": string,"item_id": string,"item_name": string,"owner_id": string
+{ Args: { "p_body": string,"p_ip_hash"?: string,"p_item_location": string,"p_latitude"?: number,"p_longitude"?: number,"p_tag_id": string,"p_token_hash": string }; Returns: {
+              "conversation_id": string,"item_id": string,"item_name": string,"message_id": string,"owner_id": string
             }[]
                            },
 "get_tag_public":
@@ -124,11 +184,25 @@ isOneToOne: false
               "item_name": string,"lost_mode": boolean,"public_message": string,"status": Database["public"]['Enums']["tag_status"]
             }[]
                            },
+"owner_block_conversation":
+{ Args: { "p_conversation_id": string }; Returns: undefined
+                           },
 "owner_close_conversation":
 { Args: { "p_conversation_id": string }; Returns: undefined
                            },
 "owner_reply":
 { Args: { "p_body": string,"p_conversation_id": string }; Returns: undefined
+                           },
+"owner_report_conversation":
+{ Args: { "p_conversation_id": string,"p_reason": string }; Returns: undefined
+                           },
+"purge_expired_data":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "photo_path": string
+            }[]
+                           },
+"rate_limit_hit":
+{ Args: { "p_key": string,"p_limit": number,"p_window_seconds": number }; Returns: boolean
                            },
 "register_tag":
 { Args: { "p_name": string,"p_public_message"?: string,"p_tag_id": string }; Returns: string

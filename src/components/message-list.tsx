@@ -9,6 +9,9 @@ export type MessageView = {
   /** 持ち主にだけ渡す。拾った人の画面では常に null */
   position: { latitude: number; longitude: number } | null;
   hasPosition: boolean;
+  /** 持ち主にだけ渡す一時 URL。拾った人の画面では常に null */
+  photoUrl: string | null;
+  hasPhoto: boolean;
 };
 
 const timeFormat = new Intl.DateTimeFormat("ja-JP", {
@@ -41,6 +44,13 @@ export function MessageList({
               <p className="message-location">{ITEM_LOCATIONS[m.itemLocation]}</p>
             )}
             {m.body && <p className="message-body">{m.body}</p>}
+            {m.photoUrl ? (
+              // 署名付きの一時 URL なので next/image の最適化は通さない
+              // eslint-disable-next-line @next/next/no-img-element
+              <img className="message-photo" src={m.photoUrl} alt="見つけた人が送った写真" />
+            ) : (
+              m.hasPhoto && <p className="note">写真を送りました</p>
+            )}
             {m.position ? (
               <p className="note">
                 <a href={mapUrl(m.position.latitude, m.position.longitude)} target="_blank" rel="noreferrer noopener">

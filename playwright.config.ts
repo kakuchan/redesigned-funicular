@@ -18,6 +18,8 @@ const appEnv: Record<string, string> = db
       SITE_URL: `http://127.0.0.1:${PORT}`,
       MAIL_PROVIDER: "mailpit",
       MAILPIT_URL: db.mailpitUrl ?? "",
+      RATE_LIMIT_SALT: "e2e-salt",
+      CRON_SECRET: "e2e-cron-secret",
     }
   : {};
 

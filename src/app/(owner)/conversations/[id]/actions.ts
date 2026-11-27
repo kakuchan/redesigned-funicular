@@ -3,6 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { MESSAGE_MAX } from "@/lib/conversations/labels";
+import { sendQuietly } from "@/lib/notify/mailer";
+import { reportMail } from "@/lib/notify/templates";
 import { createClient } from "@/lib/supabase/server";
 
 type FormState = { error?: string; sent?: number };
@@ -43,4 +45,31 @@ export async function closeConversation(conversationId: string) {
   const supabase = await ownerClient(conversationId);
   await supabase.rpc("owner_close_conversation", { p_conversation_id: conversationId });
   revalidatePath(`/conversations/${conversationId}`);
+}
+
+export async function blockConversation(conversationId: string) {
+  const supabase = await ownerClient(conversationId);
+  await supabase.rpc("owner_block_conversation", { p_conversation_id: conversationId });
+  revalidatePath(`/conversations/${conversationId}`);
+}
+
+export async function reportConversation(
+  conversationId: string,
+  _prev: FormState,
+  form: FormData,
+): Promise<FormState> {
+  const supabase = await ownerClient(conversationId);
+  const reason = String(form.get("reason") ?? "").trim();
+  if (!reason) return { error: "理由を入れてください" };
+  if ([...reason].length > 1000) return { error: "理由は1000文字までです" };
+  const { error } = await supabase.rpc("owner_report_conversation", {
+    p_conversation_id: conversationId,
+    p_reason: reason,
+  });
+  if (error) return { error: "送れませんでした" };
+  const operator = process.env.REPORT_EMAIL;
+  if (operator) {
+    await sendQuietly({ to: operator, ...reportMail({ reporter: "owner", conversationId, reason }) });
+  }
+  return { sent: Date.now() };
 }

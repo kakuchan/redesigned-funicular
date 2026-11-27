@@ -4,8 +4,11 @@ import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { MessageForm } from "@/components/message-form";
 import { MessageList, type MessageView } from "@/components/message-list";
+import { ReportForm } from "@/components/report-form";
+import { signedPhotoUrl } from "@/lib/photos/store";
+import { ConfirmButton } from "../../items/[id]/confirm-button";
 import { requireUser } from "@/lib/auth/user";
-import { closeConversation, ownerReply } from "./actions";
+import { blockConversation, closeConversation, ownerReply, reportConversation } from "./actions";
 
 export const metadata: Metadata = { title: "見つけた人とのやり取り" };
 
@@ -32,11 +35,12 @@ async function Conversation({ params }: { params: PageProps<"/conversations/[id]
 
   const { data: rows } = await supabase
     .from("messages")
-    .select("id, sender, body, item_location, latitude, longitude, created_at")
+    .select("id, sender, body, item_location, latitude, longitude, photo_path, created_at")
     .eq("conversation_id", id)
     .order("created_at", { ascending: true });
 
-  const messages: MessageView[] = (rows ?? []).map((m) => ({
+  // RLS で読めたメッセージの写真だけ、一時 URL を作る
+  const messages: MessageView[] = await Promise.all((rows ?? []).map(async (m) => ({
     id: m.id,
     sender: m.sender as "finder" | "owner",
     body: m.body,
@@ -47,7 +51,9 @@ async function Conversation({ params }: { params: PageProps<"/conversations/[id]
         ? { latitude: m.latitude, longitude: m.longitude }
         : null,
     hasPosition: m.latitude !== null,
-  }));
+    photoUrl: m.photo_path ? await signedPhotoUrl(m.photo_path) : null,
+    hasPhoto: m.photo_path !== null,
+  })));
 
   const active = conversation.status === "open" && new Date(conversation.expires_at) > new Date();
 
@@ -77,9 +83,23 @@ async function Conversation({ params }: { params: PageProps<"/conversations/[id]
         <p className="card">
           {conversation.status === "closed"
             ? "このやり取りは終わりました。"
-            : "見つけた人の返信用リンクの期限が切れました。"}
+            : conversation.status === "blocked"
+              ? "この相手をブロックしました。30日間、この持ち物に連絡できません。"
+              : "見つけた人の返信用リンクの期限が切れました。"}
         </p>
       )}
+      {conversation.status !== "blocked" && (
+        <section className="card">
+          <h2>いたずら・嫌がらせのとき</h2>
+          <p className="note">ブロックすると、このやり取りを終え、同じ相手から30日間この持ち物に連絡が来なくなります。</p>
+          <ConfirmButton
+            action={blockConversation.bind(null, id)}
+            label="この相手をブロックする"
+            confirmLabel="ブロックする"
+          />
+        </section>
+      )}
+      <ReportForm action={reportConversation.bind(null, id)} />
     </>
   );
 }
