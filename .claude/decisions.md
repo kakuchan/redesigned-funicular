@@ -19,6 +19,13 @@
 
 ---
 
+### D-005: 雛形の細かい選択（2026-11-27）
+- 状態: 確定（T-001）
+- 判断: Node.js 22 以上、Next.js 16（create-next-app の既定のまま `cacheComponents` 有効）。Supabase の鍵は新しい名前の公開キー `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` を使い、`@supabase/ssr` でブラウザ用とサーバー用のクライアントを分ける。サーバー用は `server-only` でブラウザに入らないようにする。Supabase CLI は devDependency に入れて `npx supabase` で揃える。フォントは外部取得をやめてシステムフォント。
+- 理由: 環境差を減らすため。拾った人用ページを軽くするため。秘密の鍵をクライアントに混ぜないため。
+- 代案と見送った理由: 旧来の anon key 名 → Supabase が publishable key へ移行中。Google Fonts → 日本語では効果が薄く、ビルド時に外部通信が要る。
+- 補足: セッション更新用の `proxy.ts` はログイン（M2）で追加する。D-002 の構成で雛形を作成済み。
+
 ### D-004: 開発の進め方は .claude/ のエージェント分担で行う（2026-11-27）
 - 状態: 確定
 - 判断: architect / developer / tester / reviewer / scheduler の5役と、`/morning` `/plan` `/build` `/status` `/review` `/checkpoint` `/parallel` のコマンドで進める。タスクは `.claude/tasks/` に1タスク1ファイル。

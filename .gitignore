@@ -1,6 +1,25 @@
+# 秘密情報
 .env
 .env.*
 !.env.example
+*.pem
+
+# 依存・ビルド
 node_modules/
 .next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# テスト
+coverage/
+test-results/
+playwright-report/
+blob-report/
+
+# その他
+.DS_Store
+.vercel
+npm-debug.log*
 .claude/settings.local.json
