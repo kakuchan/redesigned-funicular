@@ -21,6 +21,7 @@ const nextConfig: NextConfig = {
       { source: "/items/:path*", headers: tagPageHeaders },
       { source: "/login/:path*", headers: tagPageHeaders },
       { source: "/conversations/:path*", headers: tagPageHeaders },
+      { source: "/account", headers: tagPageHeaders },
       { source: "/c/:path*", headers: tagPageHeaders },
     ];
   },
