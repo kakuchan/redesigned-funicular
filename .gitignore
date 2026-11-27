@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.example
+node_modules/
+.next/
+.claude/settings.local.json
