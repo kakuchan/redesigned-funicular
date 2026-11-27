@@ -2,6 +2,9 @@
   --background: #ffffff;
   --foreground: #1a1a1a;
   --muted: #5c5c5c;
+  --border: #dddddd;
+  --accent: #c2410c;
+  --accent-foreground: #ffffff;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -9,6 +12,9 @@
     --background: #121212;
     --foreground: #f2f2f2;
     --muted: #b0b0b0;
+    --border: #333333;
+    --accent: #fb923c;
+    --accent-foreground: #1a1a1a;
   }
 }
 
@@ -45,9 +51,66 @@ main {
 
 h1 {
   font-size: 1.5rem;
-  margin-bottom: 1rem;
+  overflow-wrap: anywhere;
 }
 
 p {
   color: var(--muted);
+}
+
+h2 {
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+
+main > * + * {
+  margin-top: 1rem;
+}
+
+.eyebrow,
+.note {
+  font-size: 0.875rem;
+}
+
+.card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.message {
+  color: var(--foreground);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+
+.lost {
+  background: var(--accent);
+  color: var(--accent-foreground);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  font-weight: 700;
+}
+
+.button {
+  display: block;
+  width: 100%;
+  min-height: 3rem;
+  padding: 0.75rem 1rem;
+  border: none;
+  border-radius: 12px;
+  background: var(--accent);
+  color: var(--accent-foreground);
+  font: inherit;
+  font-weight: 700;
+  text-align: center;
+  text-decoration: none;
+}
+
+.button:disabled {
+  opacity: 0.5;
+}
+
+.card .button {
+  margin-top: 0.75rem;
 }

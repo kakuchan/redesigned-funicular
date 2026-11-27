@@ -1,7 +1,7 @@
 ---
 id: T-003
 title: タグIDの発行スクリプト
-status: review
+status: done
 milestone: M1
 depends: [T-002]
 parallel: yes

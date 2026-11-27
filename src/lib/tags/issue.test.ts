@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { buildCsv, normalizeBaseUrl, parseIssueArgs, tagUrl } from "./tag-issue";
+import { buildCsv, normalizeBaseUrl, parseIssueArgs, tagUrl } from "./issue";
 
 const base = ["--lot", "〇〇小 2026春", "--count", "100", "--base-url", "https://example.com"];
 

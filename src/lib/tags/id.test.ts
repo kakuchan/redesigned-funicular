@@ -4,7 +4,7 @@ import {
   TAG_ID_LENGTH,
   generateTagId,
   isTagId,
-} from "./tag-id";
+} from "./id";
 
 // DB の制約（supabase/migrations/..._tags_items.sql）と同じ
 const DB_CHECK = /^[0-9A-Za-z]{12,32}$/;
