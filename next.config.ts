@@ -10,6 +10,10 @@ const nextConfig: NextConfig = {
   cacheComponents: true,
   partialPrefetching: true,
   poweredByHeader: false,
+  experimental: {
+    // 写真（ブラウザで縮小した JPEG、3MB まで）を Server Action で受け取るため
+    serverActions: { bodySizeLimit: "4mb" },
+  },
   async headers() {
     return [
       { source: "/t/:path*", headers: tagPageHeaders },

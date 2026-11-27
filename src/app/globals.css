@@ -300,3 +300,21 @@ select {
   white-space: pre-wrap;
   overflow-wrap: anywhere;
 }
+
+.message-photo {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  margin-top: 0.5rem;
+  border-radius: 8px;
+}
+
+.report summary {
+  cursor: pointer;
+  color: var(--muted);
+  font-size: 0.875rem;
+}
+
+.report .form {
+  margin-top: 0.5rem;
+}

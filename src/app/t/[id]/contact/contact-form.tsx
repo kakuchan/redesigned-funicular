@@ -2,6 +2,7 @@
 
 import { useActionState, useState } from "react";
 import { ITEM_LOCATIONS, MESSAGE_MAX } from "@/lib/conversations/labels";
+import { resizeToJpeg } from "@/lib/photos/resize";
 import type { ContactState } from "./actions";
 
 type PositionState =
@@ -17,6 +18,27 @@ export function ContactForm({
 }) {
   const [state, formAction, pending] = useActionState<ContactState, FormData>(action, {});
   const [position, setPosition] = useState<PositionState>({ kind: "off" });
+  const [photo, setPhoto] = useState<"none" | "loading" | "ready" | "error">("none");
+
+  async function onPhotoChange(input: HTMLInputElement) {
+    const file = input.files?.[0];
+    if (!file) {
+      setPhoto("none");
+      return;
+    }
+    setPhoto("loading");
+    try {
+      // 縮小して位置情報を消した JPEG に置き換える
+      const resized = await resizeToJpeg(file);
+      const dt = new DataTransfer();
+      dt.items.add(resized);
+      input.files = dt.files;
+      setPhoto("ready");
+    } catch {
+      input.value = "";
+      setPhoto("error");
+    }
+  }
 
   function togglePosition(on: boolean) {
     if (!on) {
@@ -56,6 +78,18 @@ export function ContactForm({
         placeholder="例: 〇〇駅の改札の窓口に届けました"
       />
 
+      <label htmlFor="photo">写真（なくても大丈夫です）</label>
+      <input
+        id="photo"
+        name="photo"
+        type="file"
+        accept="image/*"
+        onChange={(e) => onPhotoChange(e.currentTarget)}
+      />
+      {photo === "loading" && <p className="note">写真を準備しています…</p>}
+      {photo === "ready" && <p className="note">写真の位置情報などは消してから送ります</p>}
+      {photo === "error" && <p className="note">この写真は使えませんでした。別の写真を選ぶか、写真なしで送ってください</p>}
+
       <label className="choice">
         <input
           type="checkbox"
@@ -79,7 +113,7 @@ export function ContactForm({
         あなたの名前や連絡先を書く必要はありません。持ち主にも伝わりません。
       </p>
       {state.error && <p className="error" role="alert">{state.error}</p>}
-      <button className="button" type="submit" disabled={pending || position.kind === "loading"}>
+      <button className="button" type="submit" disabled={pending || position.kind === "loading" || photo === "loading"}>
         持ち主に知らせる
       </button>
     </form>

@@ -14,6 +14,7 @@
 npm install
 cp .env.example .env.local   # 値は下の手順で入れる
 npm run db:start             # ローカルの Supabase を起動（初回はイメージの取得に時間がかかります）
+                             # 写真の保存に Storage を使うので、-x で storage-api を外さないでください
 npx supabase status          # API URL と公開キー（Publishable key）を .env.local に書く
 npm run dev                  # http://localhost:3000
 # ログインの確認コードはテスト用受信箱（npx supabase status の Mailpit URL）に届きます
