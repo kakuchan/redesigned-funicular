@@ -27,6 +27,8 @@ npm run dev                  # http://localhost:3000
 | `npm test` | 単体テスト（Vitest） |
 | `npm run test:e2e` | E2E（Playwright、スマホ表示）。初回は `npx playwright install chromium` |
 | `npm run build` | 本番ビルド |
+| `npm run test:db` | DB のテスト（pgTAP、ローカルの Supabase が必要） |
+| `npm run db:types` | DB から TypeScript の型を作り直す |
 | `npm run db:start` / `npm run db:stop` | ローカルの Supabase の起動・停止 |
 
 ## フォルダ

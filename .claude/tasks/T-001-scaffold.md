@@ -1,7 +1,7 @@
 ---
 id: T-001
 title: Next.js ＋ Supabase の雛形を作る
-status: review
+status: done
 milestone: M0
 depends: []
 parallel: no
