@@ -1,7 +1,7 @@
 ---
 id: T-002
 title: タグ・持ち物のテーブルと RLS
-status: review
+status: done
 milestone: M1
 depends: [T-001]
 parallel: yes

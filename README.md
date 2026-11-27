@@ -29,6 +29,7 @@ npm run dev                  # http://localhost:3000
 | `npm run build` | 本番ビルド |
 | `npm run test:db` | DB のテスト（pgTAP、ローカルの Supabase が必要） |
 | `npm run db:types` | DB から TypeScript の型を作り直す |
+| `npm run tags:issue -- --lot <ロット名> --count <数> --base-url <URL>` | タグ ID を発行して DB に登録し、`issued/` に CSV を出す（運営用。`SUPABASE_SECRET_KEY` が必要） |
 | `npm run db:start` / `npm run db:stop` | ローカルの Supabase の起動・停止 |
 
 ## フォルダ
@@ -37,5 +38,6 @@ npm run dev                  # http://localhost:3000
 - `src/lib/supabase/` Supabase クライアント（ブラウザ用 `client.ts`、サーバー用 `server.ts`）
 - `src/lib/env.ts` 公開してよい環境変数の読み込み
 - `supabase/` ローカル設定とマイグレーション（`supabase/migrations/`）
+- `scripts/` 運営用のスクリプト（タグ ID の発行）
 - `e2e/` Playwright のテスト
 - `.claude/` 開発の進め方（エージェント、コマンド、タスク、設計判断）

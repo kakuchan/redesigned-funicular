@@ -23,3 +23,6 @@ blob-report/
 .vercel
 npm-debug.log*
 .claude/settings.local.json
+
+# タグ発行など運営の作業で出力したファイル（URL 一覧）
+issued/
