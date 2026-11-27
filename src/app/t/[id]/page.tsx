@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
+import { rememberedFinderToken } from "@/lib/conversations/finder-cookie";
 import { getTagPublicRpc } from "@/lib/supabase/public";
 import { readPublicTag } from "@/lib/tags/public";
 
@@ -57,7 +58,8 @@ async function TagView({ params }: { params: PageProps<"/t/[id]">["params"] }) {
         </>
       );
 
-    case "active":
+    case "active": {
+      const previous = await rememberedFinderToken(id);
       return (
         <>
           {tag.lostMode && (
@@ -73,14 +75,19 @@ async function TagView({ params }: { params: PageProps<"/t/[id]">["params"] }) {
               <p className="message">{tag.publicMessage}</p>
             </section>
           )}
-          {/* 連絡の送信は M3 で作る */}
-          <button className="button" type="button" disabled>
-            持ち主に連絡する（準備中）
-          </button>
+          <Link className="button" href={`/t/${id}/contact`}>
+            持ち主に知らせる
+          </Link>
+          {previous && (
+            <p>
+              <Link href={`/c/${previous}`}>前に送ったやり取りを見る</Link>
+            </p>
+          )}
           <p className="note">
             あなたの名前や連絡先は、持ち主には伝わりません。
           </p>
         </>
       );
+    }
   }
 }

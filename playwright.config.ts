@@ -4,7 +4,7 @@ import { localSupabase } from "./e2e/local-supabase";
 const PORT = 3100;
 
 // ローカルの Supabase が動いていれば、タグのページのテストもそれに向けて行う
-// （テスト側の補助にだけ secret key とテスト用受信箱の URL を渡す。アプリには渡さない）
+// アプリにはローカルの接続情報と、通知をテスト用受信箱へ送る設定を渡す
 const db = localSupabase();
 process.env.E2E_HAS_DB = db ? "1" : "";
 process.env.E2E_SUPABASE_URL = db?.url ?? "";
@@ -14,6 +14,10 @@ const appEnv: Record<string, string> = db
   ? {
       NEXT_PUBLIC_SUPABASE_URL: db.url,
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: db.publishableKey,
+      SUPABASE_SECRET_KEY: db.secretKey ?? "",
+      SITE_URL: `http://127.0.0.1:${PORT}`,
+      MAIL_PROVIDER: "mailpit",
+      MAILPIT_URL: db.mailpitUrl ?? "",
     }
   : {};
 

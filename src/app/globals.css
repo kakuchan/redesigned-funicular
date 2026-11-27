@@ -8,6 +8,7 @@
   --link: #1d4ed8;
   --danger: #b91c1c;
   --success: #15803d;
+  --bubble: #fff3e8;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -21,6 +22,7 @@
     --link: #93c5fd;
     --danger: #ef4444;
     --success: #4ade80;
+    --bubble: #2a1f17;
   }
 }
 
@@ -237,4 +239,64 @@ select {
   background: var(--accent);
   color: var(--accent-foreground);
   border-color: var(--accent);
+}
+
+.choices {
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.choices legend {
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+}
+
+.choice {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 400 !important;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.choice input {
+  width: auto;
+}
+
+.messages {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.message {
+  max-width: 85%;
+  padding: 0.75rem;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+}
+
+.message.mine {
+  align-self: flex-end;
+  background: var(--bubble);
+}
+
+.message-meta {
+  font-size: 0.75rem;
+}
+
+.message-location {
+  font-weight: 700;
+  color: var(--foreground);
+}
+
+.message-body {
+  color: var(--foreground);
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
 }

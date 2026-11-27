@@ -23,7 +23,27 @@ export type Database = {
           }
         },"public": {
           Tables: {
-            "items": {
+            "conversations": {
+                  Row: {
+                    "closed_at": string | null,"created_at": string,"expires_at": string,"finder_token_hash": string,"id": string,"item_id": string,"last_message_at": string,"status": string,"conversation_is_active": boolean | null
+                  }
+                  ComputedFields: "conversation_is_active"
+                  Insert: {
+                    "closed_at"?: string | null,"created_at"?: string,"expires_at"?: string,"finder_token_hash": string,"id"?: string,"item_id": string,"last_message_at"?: string,"status"?: string
+                  }
+                  Update: {
+                    "closed_at"?: string | null,"created_at"?: string,"expires_at"?: string,"finder_token_hash"?: string,"id"?: string,"item_id"?: string,"last_message_at"?: string,"status"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "conversations_item_id_fkey"
+      columns: ["item_id"]
+isOneToOne: false
+      referencedRelation: "items"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"items": {
                   Row: {
                     "created_at": string,"id": string,"lost_mode": boolean,"name": string,"owner_id": string,"paused": boolean,"public_message": string,"tag_id": string,"updated_at": string
                   }
@@ -40,6 +60,26 @@ export type Database = {
       columns: ["tag_id"]
 isOneToOne: true
       referencedRelation: "tags"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"messages": {
+                  Row: {
+                    "body": string,"conversation_id": string,"created_at": string,"id": string,"item_location": string | null,"latitude": number | null,"longitude": number | null,"sender": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "body"?: string,"conversation_id": string,"created_at"?: string,"id"?: string,"item_location"?: string | null,"latitude"?: number | null,"longitude"?: number | null,"sender": string
+                  }
+                  Update: {
+                    "body"?: string,"conversation_id"?: string,"created_at"?: string,"id"?: string,"item_location"?: string | null,"latitude"?: number | null,"longitude"?: number | null,"sender"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "messages_conversation_id_fkey"
+      columns: ["conversation_id"]
+isOneToOne: false
+      referencedRelation: "conversations"
       referencedColumns: ["id"]
     }
                   ]
@@ -63,10 +103,32 @@ isOneToOne: true
             [_ in never]: never
           }
           Functions: {
-            "get_tag_public":
+            "conversation_is_active":
+{ Args: { "c": Omit<Database["public"]['Tables']["conversations"]['Row'], Database["public"]['Tables']["conversations"]['ComputedFields']> }; Returns: boolean
+                           },
+"finder_get_conversation":
+{ Args: { "p_token_hash": string }; Returns: Json
+                           },
+"finder_reply":
+{ Args: { "p_body": string,"p_token_hash": string }; Returns: {
+              "conversation_id": string,"item_id": string,"item_name": string,"owner_id": string
+            }[]
+                           },
+"finder_start_conversation":
+{ Args: { "p_body": string,"p_item_location": string,"p_latitude"?: number,"p_longitude"?: number,"p_tag_id": string,"p_token_hash": string }; Returns: {
+              "conversation_id": string,"item_id": string,"item_name": string,"owner_id": string
+            }[]
+                           },
+"get_tag_public":
 { Args: { "p_tag_id": string }; Returns: {
               "item_name": string,"lost_mode": boolean,"public_message": string,"status": Database["public"]['Enums']["tag_status"]
             }[]
+                           },
+"owner_close_conversation":
+{ Args: { "p_conversation_id": string }; Returns: undefined
+                           },
+"owner_reply":
+{ Args: { "p_body": string,"p_conversation_id": string }; Returns: undefined
                            },
 "register_tag":
 { Args: { "p_name": string,"p_public_message"?: string,"p_tag_id": string }; Returns: string
